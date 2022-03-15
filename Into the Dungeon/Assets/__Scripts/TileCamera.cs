@@ -54,6 +54,8 @@ public class TileCamera : MonoBehaviour
         }
 
         print("Rozmiar mapy to: " + W + "x" + H);
+
+        ShowMap();
     }
 
     static public int GET_MAP(int x, int y)
@@ -81,5 +83,24 @@ public class TileCamera : MonoBehaviour
         }
 
         MAP[x, y] = tNum;
+    }
+
+    void ShowMap()
+    {
+        TILES = new Tile[W, H];
+
+        for (int j=0; j<H; j++)
+        {
+            for (int i=0; i<W; i++)
+            {
+                if (MAP[i, j] != 0)
+                {
+                    Tile ti = Instantiate<Tile>(tilePrefab);
+                    ti.transform.SetParent(TILE_ANCHOR);
+                    ti.SetTile(i, j);
+                    TILES[i, j] = ti;
+                }
+            }
+        }
     }
 }
