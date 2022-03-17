@@ -4,9 +4,9 @@ using UnityEngine;
 
 public interface IFacingMover
 {
-    int Facing { get; }
+    int GetFacing();
     bool moving { get; }
-    float Speed { get; }
+    float GetSpeed();
     float gridMult { get; }
     Vector2 roomPos { get; set; }
     Vector2 roomNum { get; set; }

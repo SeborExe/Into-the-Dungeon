@@ -37,9 +37,9 @@ public class Skeletos : Enemy, IFacingMover
         timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax);
     }
 
-    public int Facing => facing;
+    public int GetFacing() => facing;
 
-    public float Speed => speed;
+    public float GetSpeed() => speed;
 
     public Vector2 GetRoomPosOnGrid(float mult = -1) => inRm.GetRoomPosOnGrid(mult);
 

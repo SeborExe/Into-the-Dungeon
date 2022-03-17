@@ -98,9 +98,9 @@ public class Dray : MonoBehaviour, IFacingMover
         rigid.velocity = vel * speed;
     }
 
-    public int Facing => facing;
+    public int GetFacing() => facing;
 
-    public float Speed => speed;
+    public float GetSpeed() => speed;
 
     public Vector2 GetRoomPosOnGrid(float mult = -1) => inRm.GetRoomPosOnGrid(mult);
 
