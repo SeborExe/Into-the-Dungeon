@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dray : MonoBehaviour, IFacingMover
+public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
     public enum eMode { idle, move, attack, transition }
 
@@ -16,6 +16,7 @@ public class Dray : MonoBehaviour, IFacingMover
     public int dirHeld = -1; //Kierunek poruszania siê
     public int facing = 1; //Kierunek patrzenia
     public eMode mode = eMode.idle;
+    public int numKeys = 0;
 
     private float timeAtkDone = 0;
     private float timeAtkNext = 0;
@@ -172,5 +173,5 @@ public class Dray : MonoBehaviour, IFacingMover
 
     public Vector2 roomPos { get => inRm.roomPos; set => inRm.roomPos = value; }
     public Vector2 roomNum { get => inRm.roomNum; set => inRm.roomNum = value; }
-
+    public int KeyCount { get => numKeys; set => numKeys = value; }
 }
