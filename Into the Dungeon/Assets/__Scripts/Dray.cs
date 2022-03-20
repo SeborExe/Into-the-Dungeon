@@ -4,25 +4,43 @@ using UnityEngine;
 
 public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode { idle, move, attack, transition }
+    public enum eMode { idle, move, attack, transition, knockback }
 
     [Header("Definiowane w panelu inspekcyjnym")]
     public float speed = 5;
     public float attackDuration = 0.25f;
     public float attackDelay = 0.5f;
     public float transitionDelay = 0.5f; //OpóŸnienie przejœcia miêdzy poziomami
+    public int maxHealth = 10;
+    public float knockbackSpeed = 10;
+    public float knockbackDuration = 0.25f;
+    public float invincibleDuration = 0.5f;
 
     [Header("Definiowane dynamicznie")]
     public int dirHeld = -1; //Kierunek poruszania siê
     public int facing = 1; //Kierunek patrzenia
     public eMode mode = eMode.idle;
     public int numKeys = 0;
+    public bool invincible = false;
+
+    [SerializeField]
+    private int _health;
+
+    public int health
+    {
+        get { return _health; }
+        set { _health = value; }
+    }
 
     private float timeAtkDone = 0;
     private float timeAtkNext = 0;
     private float transitionDone = 0;
     private Vector2 transitionPos;
+    private float knockbackDone = 0;
+    private float invincibleDone = 0;
+    private Vector3 knockbackVel;
 
+    private SpriteRenderer sRend;
     private Rigidbody rigid;
     private Animator anim;
     private InRoom inRm;
@@ -41,10 +59,21 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
+        sRend = GetComponent<SpriteRenderer>();
+        health = maxHealth;
     }
 
     private void Update()
     {
+        //Sprawdzenie odrzucenia i nieœmiertelnoœci
+        if (invincible && Time.time > invincibleDone) invincible = false;
+        sRend.color = invincible ? Color.red : Color.white;
+        if (mode == eMode.knockback)
+        {
+            rigid.velocity = knockbackVel;
+            if (Time.time < knockbackDone) return;
+        }
+
         if (mode == eMode.transition)
         {
             rigid.velocity = Vector3.zero;
@@ -161,7 +190,44 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         }
     }
 
-    public int GetFacing() => facing;
+    private void OnCollisionEnter(Collision coll)
+    {
+        if (invincible) return;
+        DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
+        if (dEf == null) return;
+
+        health -= dEf.damage;
+        invincible = true;
+        invincibleDone = Time.time + invincibleDuration;
+
+        if (dEf.knockback)
+        {
+            Vector3 delta = transform.position - coll.transform.position;
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            {
+                //Odrzucenie w kierunku poziomym
+                delta.x = (delta.x > 0) ? 1 : -1;
+                delta.y = 0;
+            }
+            else
+            {
+                //Odrzucenie w kierunku pionowym
+                delta.x = 0;
+                delta.y = (delta.y > 0) ? 1 : -1;
+            }
+
+            knockbackVel = delta * knockbackSpeed;
+            rigid.velocity = knockbackVel;
+
+            mode = eMode.knockback;
+            knockbackDuration = Time.time + knockbackDuration;
+        }
+    }
+
+    public int GetFacing()
+    {
+        return facing;
+    }
 
     public float GetSpeed() => speed;
 
@@ -171,7 +237,10 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     public float gridMult => inRm.gridMult;
 
-    public Vector2 roomPos { get => inRm.roomPos; set => inRm.roomPos = value; }
+    public Vector2 roomPos 
+    {
+        get { return inRm.roomPos; }  set { inRm.roomPos = value; } 
+    }
     public Vector2 roomNum { get => inRm.roomNum; set => inRm.roomNum = value; }
     public int KeyCount { get => numKeys; set => numKeys = value; }
 }
