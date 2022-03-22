@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 212000013552399512}
   - component: {fileID: 135000012625933370}
   - component: {fileID: 54000013947594838}
+  - component: {fileID: -8070780454145426608}
   m_Layer: 11
   m_Name: Spiker
   m_TagString: Untagged
@@ -72,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -165514783
-  m_SortingLayer: 0
+  m_SortingLayerID: -2053880085
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a036b96ada20f4506bd02ffcd3b831ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -115,3 +116,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!114 &-8070780454145426608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010950105738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f596252f87e344ab9b1b23d9a9e7bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  knockbackSpeed: 10
+  knockbackDuration: 0.25
+  invincibleDuration: 0.5
+  guarantedItemDrop: {fileID: 0}
+  randomItemDrop: []
+  health: 0
+  invincible: 0
+  knockback: 0
+  sensorRange: 3
+  attackSpeed: 6
+  retractSpeed: 3
+  radius: 0.4

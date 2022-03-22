@@ -70,6 +70,11 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void Update()
     {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+
         //Sprawdzenie odrzucenia i nieœmiertelnoœci
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
