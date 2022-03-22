@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class InRoom : MonoBehaviour
 {
-    static public float ROOM_W = 16;
-    static public float ROOM_H = 11;
-    static public float WALL_T = 2;
+    static public int ROOM_W = 16;
+    static public int ROOM_H = 11;
+    static public int WALL_T = 2;
 
     static public int MAX_RM_X = 9;
     static public int MAX_RM_Y = 9;
@@ -61,7 +61,7 @@ public class InRoom : MonoBehaviour
         {
             Vector2 tPos = transform.position;
             tPos.x = Mathf.Floor(tPos.x / ROOM_W);
-            tPos.y = Mathf.Floor(tPos.x / ROOM_H);
+            tPos.y = Mathf.Floor(tPos.y / ROOM_H);
             return tPos;
         }
 

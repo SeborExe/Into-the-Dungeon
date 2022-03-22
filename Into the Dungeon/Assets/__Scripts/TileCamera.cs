@@ -30,7 +30,7 @@ public class TileCamera : MonoBehaviour
         SPRITES = Resources.LoadAll<Sprite>(mapTiles.name);
 
         //Wczytywanie danych mapy
-        string[] lines = mapData.text.Split("\n");
+        string[] lines = mapData.text.Split('\n');
         H = lines.Length;
         string[] tileNums = lines[0].Split(' ');
         W = tileNums.Length;

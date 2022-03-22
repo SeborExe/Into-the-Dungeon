@@ -50,7 +50,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         Vector3.right, Vector3.up, Vector3.left, Vector3.down
     };
 
-    private KeyCode[] keys = new KeyCode[]
+    private KeyCode[] buttons = new KeyCode[]
     {
         KeyCode.D, KeyCode.W, KeyCode.A, KeyCode.S
     };
@@ -68,6 +68,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         //Sprawdzenie odrzucenia i nieœmiertelnoœci
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
+
         if (mode == eMode.knockback)
         {
             rigid.velocity = knockbackVel;
@@ -89,7 +90,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
         for (int i=0; i<4; i++)
         {
-            if (Input.GetKey(keys[i])) dirHeld = i;
+            if (Input.GetKey(buttons[i])) dirHeld = i;
         }
 
         if (Input.GetKeyDown(KeyCode.K) && Time.time >= timeAtkNext)
@@ -162,16 +163,16 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         Vector2 rm = roomNum;
         switch (doorNum)
         {
-            case 0:
+            case 0: //Prawo
                 rm.x += 1;
                 break;
-            case 1:
+            case 1: //Góra
                 rm.y += 1;
                 break;
-            case 2:
+            case 2: //Lewo
                 rm.x -= 1;
                 break;
-            case 3:
+            case 3: //Dó³
                 rm.y -= 1;
                 break;
         }
@@ -183,6 +184,12 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             {
                 roomNum = rm;
                 transitionPos = InRoom.DOORS[(doorNum + 2) % 4];
+
+                //Debug.Log(transitionPos);
+                //Debug.Log("rm.y=" + rm.y);
+                //Debug.Log("rm.x=" + rm.x);
+                //Debug.Log("rm=" + rm);
+
                 roomPos = transitionPos;
                 mode = eMode.transition;
                 transitionDone = Time.time + transitionDelay;
@@ -229,18 +236,38 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         return facing;
     }
 
-    public float GetSpeed() => speed;
+    public float GetSpeed()
+    {
+        return speed;
+    }
 
-    public Vector2 GetRoomPosOnGrid(float mult = -1) => inRm.GetRoomPosOnGrid(mult);
+    public Vector2 GetRoomPosOnGrid(float mult = -1)
+    {
+        return inRm.GetRoomPosOnGrid(mult);
+    }
 
-    public bool moving => (mode == eMode.move);
+    public bool moving
+    {
+        get { return (mode == eMode.move); }
+    }
 
-    public float gridMult => inRm.gridMult;
+    public float gridMult
+    {
+        get { return inRm.gridMult; }
+    }
 
     public Vector2 roomPos 
     {
         get { return inRm.roomPos; }  set { inRm.roomPos = value; } 
     }
-    public Vector2 roomNum { get => inRm.roomNum; set => inRm.roomNum = value; }
-    public int KeyCount { get => numKeys; set => numKeys = value; }
+    public Vector2 roomNum 
+    {
+        get { return inRm.roomNum; }
+        set { inRm.roomNum = value; }
+    }
+    public int keyCount 
+    {
+        get { return numKeys; }
+        set { numKeys = value; } 
+    }
 }

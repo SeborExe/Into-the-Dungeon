@@ -274,7 +274,7 @@ MonoBehaviour:
   dirHeld: -1
   facing: 1
   mode: 0
-  numKeys: 0
+  numKeys: 1
   invincible: 0
   _health: 0
 --- !u!135 &20315654

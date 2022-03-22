@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +6,7 @@ public class CamFollowDray : MonoBehaviour
 {
     static public bool TRANSITIONING = false;
 
-    [Header("Definiowane w panelu inspekcyjnym")]
+    [Header("Set In Inspector")]
     public InRoom drayInRm;
     public float transTime = 0.5f;
 
@@ -16,12 +15,13 @@ public class CamFollowDray : MonoBehaviour
     private InRoom inRm;
     private float transStart;
 
-    private void Awake()
+    void Awake()
     {
         inRm = GetComponent<InRoom>();
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
         if (TRANSITIONING)
         {
@@ -31,24 +31,24 @@ public class CamFollowDray : MonoBehaviour
                 u = 1;
                 TRANSITIONING = false;
             }
-
             transform.position = (1 - u) * p0 + u * p1;
         }
         else
         {
             if (drayInRm.roomNum != inRm.roomNum)
             {
-                TransitioningTo(drayInRm.roomNum);
+                TransitionTo(drayInRm.roomNum);
             }
         }
     }
 
-    private void TransitioningTo(Vector2 rm)
+    void TransitionTo(Vector2 rm)
     {
         p0 = transform.position;
         inRm.roomNum = rm;
         p1 = transform.position + (Vector3.back * 10);
         transform.position = p0;
+
         transStart = Time.time;
         TRANSITIONING = true;
     }
