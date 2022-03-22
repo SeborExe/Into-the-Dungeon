@@ -185,11 +185,6 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
                 roomNum = rm;
                 transitionPos = InRoom.DOORS[(doorNum + 2) % 4];
 
-                //Debug.Log(transitionPos);
-                //Debug.Log("rm.y=" + rm.y);
-                //Debug.Log("rm.x=" + rm.x);
-                //Debug.Log("rm=" + rm);
-
                 roomPos = transitionPos;
                 mode = eMode.transition;
                 transitionDone = Time.time + transitionDelay;
@@ -229,6 +224,25 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             mode = eMode.knockback;
             knockbackDuration = Time.time + knockbackDuration;
         }
+    }
+
+    private void OnTriggerEnter(Collider colld)
+    {
+        PickUp pup = colld.GetComponent<PickUp>();
+        if (pup == null) return;
+
+        switch (pup.itemType)
+        {
+            case PickUp.eType.health:
+                health = Mathf.Min(health + 2, maxHealth);
+                break;
+
+            case PickUp.eType.key:
+                keyCount++;
+                break;
+        }
+
+        Destroy(colld.gameObject);
     }
 
     public int GetFacing()

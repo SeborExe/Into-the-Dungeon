@@ -952,6 +952,13 @@ MonoBehaviour:
   knockbackSpeed: 10
   knockbackDuration: 0.25
   invincibleDuration: 0.5
+  guarantedItemDrop: {fileID: 0}
+  randomItemDrop:
+  - {fileID: 2348067746977323163, guid: 7e59c4f74f36fb4438a5e1b5a7819353, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   health: 0
   invincible: 0
   knockback: 0

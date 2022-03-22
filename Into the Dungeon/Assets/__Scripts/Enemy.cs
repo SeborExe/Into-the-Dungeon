@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
     public float invincibleDuration = 0.5f;
+    public GameObject guarantedItemDrop;
+    public GameObject[] randomItemDrop;
 
     [Header("Definiowane dynamicznie")]
     public float health;
@@ -90,6 +92,24 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        GameObject go;
+        if (guarantedItemDrop != null)
+        {
+            go = Instantiate<GameObject>(guarantedItemDrop);
+            go.transform.position = transform.position;
+        }
+
+        else if (randomItemDrop.Length > 0)
+        {
+            int n = Random.Range(0, randomItemDrop.Length);
+            GameObject prefab = randomItemDrop[n];
+            if (prefab != null)
+            {
+                go = Instantiate(prefab);
+                go.transform.position = transform.position;
+            }
+        }
+
         Destroy(gameObject);
     }
 }
