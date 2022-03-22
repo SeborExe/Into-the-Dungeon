@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TileSwap
+{
+    public int tileNum;
+    public GameObject swapPrefab;
+    public GameObject guaranteedItemDrop;
+    public int overrideTileNum = -1;
+}
+
 public class TileCamera : MonoBehaviour
 {
     static private int W, H;
@@ -16,10 +25,18 @@ public class TileCamera : MonoBehaviour
     public Texture2D mapTiles;
     public TextAsset mapCollision;
     public Tile tilePrefab;
+    public int defaultTileNum;
+    public List<TileSwap> tileSwaps;
+
+    private Dictionary<int, TileSwap> tileSwapDict;
+    private Transform enemyAnchor, itemAnchor;
 
     private void Awake()
     {
         COLLISIONS = Utils.RemoveLineEndings(mapCollision.text);
+        PrepareTileSwapDict();
+        enemyAnchor = (new GameObject("Enemy Anchor")).transform;
+        itemAnchor = (new GameObject("Item Anchor")).transform;
         LoadMap();
     }
 
@@ -52,6 +69,8 @@ public class TileCamera : MonoBehaviour
                 {
                     MAP[i, j] = int.Parse(tileNums[i], hexNum);
                 }
+
+                CheckTileSwaps(i, j);
             }
         }
 
@@ -103,6 +122,56 @@ public class TileCamera : MonoBehaviour
                     TILES[i, j] = ti;
                 }
             }
+        }
+    }
+
+    void PrepareTileSwapDict()
+    {
+        tileSwapDict = new Dictionary<int, TileSwap>();
+        foreach (TileSwap ts in tileSwaps)
+        {
+            tileSwapDict.Add(ts.tileNum, ts);
+        }
+    }
+
+    void CheckTileSwaps(int i, int j)
+    {
+        int tNum = GET_MAP(i, j);
+        if (!tileSwapDict.ContainsKey(tNum)) return;
+
+        //Podmieniamy kafelek
+        TileSwap ts = tileSwapDict[tNum];
+        if (ts.swapPrefab != null)
+        {
+            GameObject go = Instantiate(ts.swapPrefab);
+            Enemy e = go.GetComponent<Enemy>();
+            if (e != null)
+            {
+                go.transform.SetParent(enemyAnchor);
+            }
+            else
+            {
+                go.transform.SetParent(itemAnchor);
+            }
+
+            go.transform.position = new Vector3(i, j, 0);
+            if (ts.guaranteedItemDrop != null)
+            {
+                if (e != null)
+                {
+                    e.guarantedItemDrop = ts.guaranteedItemDrop;
+                }
+            }
+        }
+
+        //Umieszczamy w jego miejsce kafelek ¿eby nie by³o dziury
+        if (ts.overrideTileNum == -1)
+        {
+            SET_MAP(i, j, defaultTileNum);
+        }
+        else
+        {
+            SET_MAP(i, j, ts.overrideTileNum);
         }
     }
 }
