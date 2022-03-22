@@ -22,6 +22,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public eMode mode = eMode.idle;
     public int numKeys = 0;
     public bool invincible = false;
+    public bool hasGrappler = false;
+    public Vector3 lastSafelock;
+    public int lastSafeFacing;
 
     [SerializeField]
     private int _health;
@@ -61,6 +64,8 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         inRm = GetComponent<InRoom>();
         sRend = GetComponent<SpriteRenderer>();
         health = maxHealth;
+        lastSafelock = transform.position; //Pocz¹tkowe po³o¿enie jest bezpieczne
+        lastSafeFacing = facing;
     }
 
     private void Update()
@@ -80,6 +85,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             rigid.velocity = Vector3.zero;
             anim.speed = 0;
             roomPos = transitionPos;
+
+            lastSafelock = transform.position;
+            lastSafeFacing = facing;
 
             if (Time.time < transitionDone) return;
             mode = eMode.idle;
@@ -240,9 +248,23 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             case PickUp.eType.key:
                 keyCount++;
                 break;
+
+            case PickUp.eType.grappler:
+                hasGrappler = true;
+                break;
         }
 
         Destroy(colld.gameObject);
+    }
+
+    public void ResetInRoom(int healthLoss = 0)
+    {
+        transform.position = lastSafelock;
+        facing = lastSafeFacing;
+        health -= healthLoss;
+
+        invincible = true;
+        invincibleDone = Time.time + invincibleDuration;
     }
 
     public int GetFacing()
